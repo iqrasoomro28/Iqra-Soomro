@@ -1,1 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Changed title to reflect the category -->
+    <title>CS Blog - Codex & Cutlery</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Use a pixelated font if available, otherwise mono */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            /* Fallback font */
+            font-family: 'VT323', monospace;
+        }
+        
+        /* Blinking cursor animation */
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            50% { 
+                opacity: 0; 
+            }
+        }
+        
+        /* Custom blocky shadow for the "window" effect */
+        .retro-window {
+            border: 2px solid #6A7B61; /* Vintage Green */
+            /* A solid, blocky shadow */
+            box-shadow: 4px 4px 0px #4A5543; /* Vintage Medium-Dark Green */
+            background-color: #FDFDFD; /* Light cream/off-white for contrast on light pink background */
+        }
+        
+        .retro-window-header {
+            border-bottom: 2px solid #6A7B61; /* Vintage Green */
+            background-color: #EAE0E0; /* Dim pink for header background */
+        }
+        
+        /* Scanlines effect for the background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(
+                rgba(0, 0, 0, 0.03) 1px, /* Darker scanlines for a light background */
+                transparent 1px
+            );
+            background-size: 1px 3px;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            padding-top: 60px;
+        }
+        .modal-content {
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+        }
+        .modal-body {
+            padding: 20px;
+            color: #22251F; /* Very dark green for text on light modal body */
+        }
+        .modal-footer {
+            padding: 10px 20px;
+            border-top: 2px solid #6A7B61; /* v-green */
+            background-color: #EAE0E0; /* Dim pink for modal footer */
+        }
+        .modal-close-btn {
+            background-color: #6A7B61;
+            color: #FDFDFD; /* Light cream text for button */
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover {
+            background-color: #4A5543; /* v-md-green */
+            color: #FDFDFD; /* Light cream text */
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['VT323', 'monospace'],
+                    },
+                    colors: {
+                        'v-bg': '#FDF1F2',         // Light pink for page bg
+                        'v-dk-green': '#282C24',   // Dark green for strong contrast text
+                        'v-md-green': '#4A5543',   // Medium-dark green for shadow, accents
+                        'v-green': '#6A7B61',      // Main green for borders, dates, some text
+                        'v-lt-pink': '#EAE0E0',    // Dim pink for softer accents, hover backgrounds
+                        'v-lt-pink-header': '#D4BABA', // Medium pink for main headers
+                        'v-md-pink': '#F7D7DB',    // Lighter pink for hover backgrounds on text
+                        'v-post-text': '#282C24',  // Dark green for general post text on light background
+                        'v-link-hover-text': '#22251F', // Very dark green for link hover text
+                        'v-window-bg': '#FDFDFD', // Light cream/off-white for window backgrounds
+                        'v-header-bg': '#EAE0E0', // Dim pink for header backgrounds
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-v-bg text-v-post-text font-mono p-4 md:p-8 relative">
+
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-v-lt-pink-header mb-4">
+                &gt; CODEX_&_CUTLERY<span class="blinking-cursor">_</span>
+            </h1>
+            <nav class="retro-window inline-block bg-v-window-bg">
+                <ul class="flex divide-x-2 divide-v-green">
+                    <!-- Update HOME link to point back to index.html -->
+                    <li class="px-4 py-2"><a href="index.html" class="hover:text-v-link-hover-text hover:bg-v-md-pink p-1">HOME</a></li>
+                    <li class="px-4 py-2"><a href="finds.html" class="hover:text-v-link-hover-text hover:bg-v-md-pink p-1">FINDS</a></li>
+                    <li class="px-4 py-2"><a href="comp-sci.html" class="hover:text-v-link-hover-text hover:bg-v-md-pink p-1">CODE</a></li>
+                    <!-- Update ABOUT link to point to the section in index.html -->
+                    <li class="px-4 py-2"><a href="index.html#about-section" class="hover:text-v-link-hover-text hover:bg-v-md-pink p-1">ABOUT</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="md:grid md:grid-cols-3 md:gap-8">
+            
+            <!-- Blog Posts (Main Column) -->
+            <main class="md:col-span-2 space-y-8">
+
+                <!-- Category Header -->
+                <header class="retro-window bg-v-window-bg">
+                    <div class="retro-window-header p-2 bg-v-header-bg">
+                        <h2 class="text-3xl text-v-dk-green">[ CATEGORY: COMP_SCI ]</h2>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-v-post-text">All posts related to code, algorithms, and classic tech.</p>
+                    </div>
+                </header>
+                
+                <!-- Post 1: The Logic of Vintage -->
+                <article class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h2 class="text-2xl text-v-dk-green">The Logic of Vintage: Finding Algorithms in Antique Patterns</h2>
+                    </header>
+                    <div class="p-4 space-y-4">
+                        <p class="text-sm text-v-green">POSTED: 2025-10-26</p>
+                        <div id="post-4-content">
+                            <p class="text-v-post-text">
+                                It's funny how my two passions overlap. This week in my data structures class, we were studying recursive patterns. It reminded me of the intricate, repeating designs on the antique silverware I found last weekend.
+                            </p>
+                            <p class="text-v-post-text">
+                                Each fork's handle followed a simple rule, repeated from the base to the tip. It's a physical algorithm. It makes you realize that logic and beautiful design aren't so different after all.
+                            </p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <!-- This link points to the full post page you created -->
+                            <a href="post-logic-vintage.html" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ READ_MORE... ]</a>
+                            <a href="#" onclick="summarizePost('summary-4', 'post-4-content'); return false;" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ ✨ SUMMARIZE ]</a>
+                        </div>
+                        <div id="summary-4" class="text-v-md-green mt-4 text-sm" style="display: none;"></div>
+                    </div>
+                </article>
+
+                <!-- Post 2: Casio -->
+                <article class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h2 class="text-2xl text-v-dk-green">A Love Letter to Casio</h2>
+                    </header>
+                    <div class="p-4 space-y-4">
+                        <p class="text-sm text-v-green">POSTED: 2025-10-23</p>
+                        <div id="post-2-content">
+                            <p class="text-v-post-text">
+                                There's just something about a good Casio watch. The F-91W. The databank. They're perfect examples of function-first design. No frills, just pure, reliable tech on your wrist.
+                            </p>
+                            <p class="text-v-post-text">
+                                It's the same aesthetic I love in computer science: clean lines, logical systems, and an elegance that lasts for decades. Pure function, no bloat.
+                            </p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <!-- This now points to a future page you can create -->
+                            <a href="post-casio.html" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ READ_MORE... ]</a>
+                            <a href="#" onclick="summarizePost('summary-2', 'post-2-content'); return false;" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ ✨ SUMMARIZE ]</a>
+                        </div>
+                        <div id="summary-2" class="text-v-md-green mt-4 text-sm" style="display: none;"></div>
+                    </div>
+                </article>
+
+                <!-- Post 3: Cozy Coding (New) -->
+                <article class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h2 class="text-2xl text-v-dk-green">Cozy Coding: Finding Comfort in Clean Code</h2>
+                    </header>
+                    <div class="p-4 space-y-4">
+                        <p class="text-sm text-v-green">POSTED: 2025-10-20</p>
+                        <div id="post-5-content">
+                            <p class="text-v-post-text">
+                                People talk about the 'grind' of computer science, but I find a different side to it. To me, refactoring code is a 'cozy' activity. It's like tidying a room or pruning a plant.
+                            </p>
+                            <p class="text-v-post-text">
+                                Taking a messy function and making it clean, readable, and efficient... it's like setting up a comfy chair in a sunlit corner. It just feels good. My desk plants seem to appreciate the calm, logical atmosphere, too.
+                            </p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <!-- This also points to a future page you can create -->
+                            <a href="post-cozy-code.html" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ READ_MORE... ]</a>
+                            <a href="#" onclick="summarizePost('summary-5', 'post-5-content'); return false;" class="inline-block mt-2 text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ ✨ SUMMARIZE ]</a>
+                        </div>
+                        <div id="summary-5" class="text-v-md-green mt-4 text-sm" style="display: none;"></div>
+                    </div>
+                </article>
+                
+
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="md:col-span-1 space-y-8 mt-8 md:mt-0">
+                
+                <!-- [ ABOUT_ME ] Section -->
+                <section id="about-section" class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h3 class="text-xl text-v-dk-green">[ ABOUT_ME ]</h3>
+                    </header>
+                    <div class="p-4">
+                        
+                        <img 
+                            src="https://placehold.co/150x150/282C24/EAE0E0?text=AVATAR&font=vt323" 
+                            alt="Pixel art avatar" 
+                            class="border-2 border-v-green mx-auto mb-4"
+                            onerror="this.src='https://placehold.co/150x150/282C24/EAE0E0?text=AVATAR&font=vt323'"
+                        >
+                        <p class="text-v-post-text">
+                            A CS student with a love for antique homewares. My style is a mix of desi and western fashion, and this blog is a mix of everything I love.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- [ POST_HELPER ] Section -->
+                <section class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h3 class="text-xl text-v-dk-green">[ ✨ POST_HELPER ]</h3>
+                    </header>
+                    <div class="p-4 space-y-4">
+                        <p class="text-v-post-text">Need inspiration?</p>
+                        <a href="#" id="generate-idea-btn" class="inline-block text-v-dk-green hover:text-v-link-hover-text hover:bg-v-md-pink p-1">[ GENERATE_IDEA ]</a>
+                        <div id="idea-result" class="text-v-md-green mt-4 text-sm" style="display: none;"></div>
+                    </div>
+                </section>
+                
+                <!-- [ CATEGORIES ] Section -->
+                <section class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h3 class="text-xl text-v-dk-green">[ CATEGORIES ]</h3>
+                    </header>
+                    <div class="p-4">
+                        <ul class="space-y-2">
+                            <li><a href="comp-sci.html" class="text-v-dk-green hover:text-v-link-hover-text">&gt; COMP_SCI</a></li>
+                            <li><a href="finds.html" class="text-v-dk-green hover:text-v-link-hover-text">&gt; VINTAGE_FINDS</a></li>
+                            <li><a href="#" class="text-v-dk-green hover:text-v-link-hover-text">&gt; BIRDING</a></li>
+                            <li><a href="#" class="text-v-dk-green hover:text-v-link-hover-text">&gt; FASHION</a></li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- [ ARCHIVES ] Section -->
+                <section class="retro-window bg-v-window-bg">
+                    <header class="retro-window-header p-2 bg-v-header-bg">
+                        <h3 class="text-xl text-v-dk-green">[ ARCHIVES ]</h3>
+                    </header>
+                    <div class="p-4">
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-v-dk-green hover:text-v-link-hover-text">&gt; OCTOBER 2025</a></li>
+                            <li><a href="#" class="text-v-dk-green hover:text-v-link-hover-text">&gt; SEPTEMBER 2025</a></li>
+                            <li><a href="#" class="text-v-dk-green hover:text-v-link-hover-text">&gt; AUGUST 2025</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </aside>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t-2 border-dashed border-v-md-green text-center text-v-green text-sm">
+            <p>(C) 2025 YOUR_NAME_HERE. ALL RIGHTS RESERVED.</p>
+            <p>SYSTEM ONLINE. READY.</p>
+        </footer>
+
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content retro-window bg-v-window-bg">
+            <header class="retro-window-header p-2 flex justify-between items-center bg-v-header-bg">
+                <h3 class="text-xl text-v-dk-green">[ SYSTEM_ERROR ]</h3>
+            </header>
+            <div class="modal-body">
+                <p id="errorMessage"></p>
+            </div>
+            <footer class="modal-footer text-right">
+                <button id="closeModalBtn" class="modal-close-btn">[ OK ]</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // The API key is left as an empty string.
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // --- Modal Logic ---
+        const modal = document.getElementById("errorModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const errorMessage = document.getElementById("errorMessage");
+
+        if (closeModalBtn) {
+            closeModalBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        function showErrorModal(message) {
+            if(errorMessage && modal) {
+                errorMessage.textContent = `ERROR: ${message}. Check console for details. Make sure API key is valid.`;
+                modal.style.display = "block";
+            }
+        }
+
+        // --- API Call Logic ---
+        async function callGemini(prompt, targetElement, loadingText = "...", maxRetries = 3) {
+            if (!targetElement) return;
+
+            targetElement.style.display = "block";
+            targetElement.textContent = loadingText;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            let attempt = 0;
+            while (attempt < maxRetries) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        
+                        const text = result.candidates[0].content.parts[0].text;
+                        targetElement.textContent = text;
+                        return; // Success
+                    } else {
+                        throw new Error("Invalid API response structure.");
+                    }
+
+                } catch (error) {
+                    console.error("API call failed:", error);
+                    attempt++;
+                    if (attempt >= maxRetries) {
+                        targetElement.textContent = `[ API call failed. ]`;
+                        showErrorModal(error.message);
+                        return; // Failed after retries
+                    }
+                    // Exponential backoff
+                    const delay = Math.pow(2, attempt) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        // --- Event Handlers ---
+
+        // Summarize Post
+        function summarizePost(summaryElementId, contentElementId) {
+            const contentElement = document.getElementById(contentElementId);
+            const summaryElement = document.getElementById(summaryElementId);
+            
+            if (contentElement && summaryElement) {
+                const postText = contentElement.textContent || contentElement.innerText;
+                const prompt = `Summarize the following blog post in one short, engaging sentence:\n\n"${postText}"`;
+                callGemini(prompt, summaryElement, "GENERATING_SUMMARY...");
+            }
+        }
+
+        // Generate Post Idea
+        const generateIdeaBtn = document.getElementById("generate-idea-btn");
+        const ideaResultElement = document.getElementById("idea-result");
+
+        if (generateIdeaBtn && ideaResultElement) {
+            generateIdeaBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const prompt = "Generate one blog post idea for a person who loves computer science, vintage cutlery, antique homewares, birdwatching, and indie fashion that mixes desi and western styles. Make the idea creative and specific.";
+                callGemini(prompt, ideaResultElement, "GENERATING_IDEA...");
+            });
+        }
+
+    </script>
+</body>
+</html>
+
 
